@@ -22,17 +22,8 @@ function Book(title, author, numPages, pagesRead) {
   else if (!Number.isInteger(pagesRead)) throw new Error("pagesRead must be an integer");
   this.pagesRead = pagesRead;
   
-  // 0 means not started, 1 means in progress, 2 means finished
-  switch (pagesRead) {
-    case 0:
-      this.progressStatus = 0;
-      break;
-    case this.numPages:
-      this.progressStatus = 2;
-      break;
-    default:
-      this.progressStatus = 1;
-  }
+  // progressStatus represents the percentage of the book that has been read
+  this.progressStatus = (this.pagesRead / this.numPages) * 100;
 
   this.bookID = Book.prototype.bookID;
   Book.prototype.bookID++;
@@ -70,9 +61,7 @@ Book.prototype.setNumPages = function(numPages) {
   else if (numPages < this.getPagesRead()) throw new Error(`can't assign value of ${numPages} to numPages for book object with pages read of ${this.pagesRead}`);
   this.numPages = numPages;
 
-  if (numPages === this.getPagesRead()) {
-    this.progressStatus = 2;
-  }
+  this.progressStatus = (this.pagesRead / numPages) * 100;
 
   return this;
 }
@@ -87,16 +76,7 @@ Book.prototype.setPagesRead = function(pagesRead) {
   else if (!Number.isInteger(pagesRead)) throw new Error("pagesRead must be an integer");
   this.pagesRead = pagesRead;
   
-  switch (pagesRead) {
-    case 0:
-      this.progressStatus = 0;
-      break;
-    case this.numPages:
-      this.progressStatus = 2;
-      break;
-    default:
-      this.progressStatus = 1;
-  }
+  this.progressStatus = (pagesRead / this.numPages) * 100;
 
   return this;
 }
