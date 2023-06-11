@@ -1,5 +1,3 @@
-const library = [];
-
 // Book constructor and methods
 
 function Book(title, author, numPages, pagesRead) {
@@ -125,11 +123,7 @@ function accessBookLibrary(bookID) {
   }
 }
 
-function displayBook(book) {
-  const bookDomElement = createBookDOMElement(book);
-  const main = document.querySelector('main');
-  main.appendChild(bookDomElement); 
-}
+// DOM functions
 
 function createBookDOMElement(book) {
   function updateProgressIcon(book, progressIcon) {
@@ -187,6 +181,7 @@ function createBookDOMElement(book) {
   const deleteIcon = createElement('img');
   deleteIcon.setAttribute('src', './img/icons/delete-book.svg');
   deleteIcon.setAttribute('alt', 'Delete book icon');
+  deleteIcon.addEventListener('click', removeBook);
 
   options.appendChild(progressIcon);
   options.appendChild(editIcon);
@@ -198,6 +193,34 @@ function createBookDOMElement(book) {
 
   return bookElement;
 }
+
+function displayBook(book) {
+  const bookDOMElement = createBookDOMElement(book);
+  const main = document.querySelector('main');
+  main.appendChild(bookDOMElement); 
+}
+
+// Combined functions (affects both DOM and library simultaneously)
+
+function addBook(title, author, numPages, pagesRead) {
+  let book = new Book(title, author, numPages, pagesRead);
+
+  addBookLibrary(book);
+  displayBook(book);
+}
+
+function removeBook(e) {
+  let bookCard = this;
+  while (!bookCard.classList.contains("book-card")) {
+    bookCard = bookCard.parentNode;
+  }
+  let bookID = Number(bookCard.getAttribute("data-book-id"));
+
+  bookCard.remove();
+  removeBookLibrary(bookID);
+}
+
+// Utility functions
 
 function createElement(type, attributes = {}) {
   const element = document.createElement(type);
@@ -214,8 +237,9 @@ function createElement(type, attributes = {}) {
   return element;
 }
 
-let bookyWooky = new Book('mah book', 'that guy', 198, 103);
-displayBook(bookyWooky);
+// Global calls
 
-let anotherone = new Book('AAAAAAAAAAAaaaaaaaH pasodifjnpas paosdnfjp[ apsdofjn asdofij a oijafdsoai', 'that guy', 1209, 1209);
-displayBook(anotherone);
+const library = [];
+
+addBook('Example Title', 'E. Specimen', 198, 103);
+addBook('AAAAAAAAAAAaaaaaaaH pasodifjnpas paosdnfjp[ apsdofjn asdofij a oijafdsoai', 'Mr. Horror Script', 1209, 1209);
