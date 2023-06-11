@@ -37,10 +37,66 @@ nav.filter-links {
 }
 
 main {
-  flex-grow: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 0 10px;
   row-gap: 10px;
 }
+
+.book-card {
+  width: min(800px, 85vw);
+  position: relative;
+  border: 1px solid black;
+  font-size: 1.4rem;
+}
+
+.progress-background {
+  position: absolute;
+  height: 100%;
+  background-color: lightgreen;
+  z-index: -9999;
+}
+
+.book-card-content {
+  display: flex;
+  padding: 0.5rem;
+  flex-wrap: wrap;
+  column-gap: 1rem;
+}
+
+.book-card img {
+  height: 1.4rem;
+  width: 1.4rem;
+}
+
+.book-card-content-title-author {
+  flex: 9999 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: space-between;
+  row-gap: 0.2rem;
+}
+
+.book-card-content-pages-options {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  row-gap: 0.5rem;
+}
+
+.book-card-content-pages-options > .pages {
+  display: flex;
+  column-gap: 0.4rem;
+  align-items: center;
+}
+
+.book-card-content-pages-options > .options {
+  display: flex;
+  column-gap: 0.5rem;
+}
+
+

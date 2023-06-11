@@ -125,3 +125,97 @@ function accessBookLibrary(bookID) {
   }
 }
 
+function displayBook(book) {
+  const bookDomElement = createBookDOMElement(book);
+  const main = document.querySelector('main');
+  main.appendChild(bookDomElement); 
+}
+
+function createBookDOMElement(book) {
+  function updateProgressIcon(book, progressIcon) {
+    if (book.progressStatus === 0) {
+      progressIcon.setAttribute('src', './img/icons/book-not-started.svg');
+      progressIcon.setAttribute('alt', 'Icon of an unopened book');
+    } else if (book.progressStatus === 100) {
+      progressIcon.setAttribute('src', './img/icons/read-book.png');
+      progressIcon.setAttribute('alt', 'Icon of a finished book');
+    } else {
+      progressIcon.setAttribute('src', './img/icons/book-in-progress.svg');
+      progressIcon.setAttribute('alt', 'Icon of a book in progress');
+    }
+  } 
+
+  const bookElement = createElement('div', {"class": ["book-card"], "data-book-id": book.getBookID().toString()});
+
+  bookElement.appendChild(createElement('div', {"class": ["progress-background"], 'style': 'width: ' + book.getProgressStatus() + '%;'}));
+
+  const bookCardContent = createElement('div', {"class": ['book-card-content']});
+  bookElement.appendChild(bookCardContent);
+
+  const bookCardContentTitleAuthor = createElement('div', {"class": ['book-card-content-title-author']});
+
+  const title = createElement('p', {"class": ['title']});
+  title.textContent = book.getTitle();
+  bookCardContentTitleAuthor.appendChild(title);
+
+  const author = createElement('p', {"class": ['author']});
+  author.textContent = book.getAuthor();
+  bookCardContentTitleAuthor.appendChild(author);
+
+  bookCardContent.appendChild(bookCardContentTitleAuthor);
+
+  const bookCardContentPagesOptions = createElement('div', {"class": ['book-card-content-pages-options']});
+
+  const pages = createElement('div', {'class': ['pages']});
+  
+  const pagesText = createElement('p');
+  pagesText.textContent = book.getPagesRead() + ' / ' + book.getNumPages();
+  pages.appendChild(pagesText);
+
+  const pagesIcon = createElement('img', {"src": "./img/icons/page.svg", "alt": "Icon of a page"});
+  pages.appendChild(pagesIcon);
+
+  bookCardContentPagesOptions.appendChild(pages);
+
+  const options = createElement('div', {"class": ['options']});
+  
+  const progressIcon = createElement('img');
+  updateProgressIcon(book, progressIcon);
+  const editIcon = createElement('img');
+  editIcon.setAttribute('src', './img/icons/edit.svg');
+  editIcon.setAttribute('alt', 'Edit icon');
+  const deleteIcon = createElement('img');
+  deleteIcon.setAttribute('src', './img/icons/delete-book.svg');
+  deleteIcon.setAttribute('alt', 'Delete book icon');
+
+  options.appendChild(progressIcon);
+  options.appendChild(editIcon);
+  options.appendChild(deleteIcon);
+
+  bookCardContentPagesOptions.appendChild(options);
+
+  bookCardContent.appendChild(bookCardContentPagesOptions);
+
+  return bookElement;
+}
+
+function createElement(type, attributes = {}) {
+  const element = document.createElement(type);
+  for (const key in attributes) {
+    if (key === "class") {
+        const classArray = attributes["class"];
+        for (let i = 0; i < classArray.length; i++) {
+          element.classList.add(classArray[i]);
+        }
+    } else {
+      element.setAttribute(key, attributes[key]);
+    }
+  }
+  return element;
+}
+
+let bookyWooky = new Book('mah book', 'that guy', 198, 103);
+displayBook(bookyWooky);
+
+let anotherone = new Book('AAAAAAAAAAAaaaaaaaH pasodifjnpas paosdnfjp[ apsdofjn asdofij a oijafdsoai', 'that guy', 1209, 1209);
+displayBook(anotherone);
