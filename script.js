@@ -197,7 +197,25 @@ function createBookDOMElement(book) {
 function displayBook(book) {
   const bookDOMElement = createBookDOMElement(book);
   const main = document.querySelector('main');
-  main.appendChild(bookDOMElement); 
+  main.insertBefore(bookDOMElement, main.lastElementChild);
+}
+
+function displayAddBookForm() {
+  const mainContentContainer = document.getElementById('main-content-container');
+  const popupContainer = document.getElementById('popup-container');
+  
+  mainContentContainer.setAttribute('style', 'filter: blur(3px);')
+  popupContainer.setAttribute('style', 'z-index: 9999; display: block;')
+  document.querySelector('body').setAttribute('style', 'overflow-y: hidden;')
+}
+
+function closeAddBookForm() {
+  const mainContentContainer = document.getElementById('main-content-container');
+  const popupContainer = document.getElementById('popup-container');
+
+  mainContentContainer.removeAttribute('style');
+  popupContainer.removeAttribute('style');
+  document.querySelector('body').removeAttribute('style');
 }
 
 // Combined functions (affects both DOM and library simultaneously)
@@ -237,9 +255,17 @@ function createElement(type, attributes = {}) {
   return element;
 }
 
+// Page initialization
+
+function addInitialListeners() {
+  document.querySelector('.add-book-button').addEventListener('click', displayAddBookForm);
+  document.getElementById('close-add-edit-book').addEventListener('click', closeAddBookForm);
+}
+
 // Global calls
 
 const library = [];
+addInitialListeners();
 
 addBook('Example Title', 'E. Specimen', 198, 103);
 addBook('AAAAAAAAAAAaaaaaaaH pasodifjnpas paosdnfjp[ apsdofjn asdofij a oijafdsoai', 'Mr. Horror Script', 1209, 1209);
