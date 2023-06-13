@@ -198,3 +198,17 @@ main {
   column-gap: 2rem;
   row-gap: 1rem;
 }
+
+.input-textual-container input.invalid, .input-textual-container input.invalid:focus{
+  border-color: red;
+  outline: none;
+}
+
+.input-textual-container input:focus {
+  border-width: 2px;
+}
+
+.invalid + .error-message {
+  color: red;
+  visibility: visible;
+}

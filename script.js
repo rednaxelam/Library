@@ -203,7 +203,9 @@ function displayBook(book) {
 function displayAddBookForm() {
   const mainContentContainer = document.getElementById('main-content-container');
   const popupContainer = document.getElementById('popup-container');
-  
+  clearAddEditForm();
+  normalValidationBehaviourAddEditForm();
+
   mainContentContainer.setAttribute('style', 'filter: blur(3px);')
   popupContainer.setAttribute('style', 'z-index: 9999; display: block;')
   document.querySelector('body').setAttribute('style', 'overflow-y: hidden;')
@@ -216,6 +218,159 @@ function closeAddBookForm() {
   mainContentContainer.removeAttribute('style');
   popupContainer.removeAttribute('style');
   document.querySelector('body').removeAttribute('style');
+}
+
+
+function validateOnblurNumPages() {
+  if (this.value.length === 0) {
+    this.classList.remove("invalid");
+    this.removeEventListener("input", validateOninputNumPages);
+  }
+  else if (errorFunctionNumPages(this.value) !== undefined) {
+    this.nextElementSibling.textContent = errorFunctionNumPages(this.value);
+    this.classList.add("invalid");
+    this.addEventListener("input", validateOninputNumPages);
+  } else {
+    this.classList.remove("invalid");
+    this.removeEventListener("input", validateOninputNumPages);
+  }
+}
+
+function validateOninputNumPages() {
+  if (errorFunctionNumPages(this.value) !== undefined) {
+    this.nextElementSibling.textContent = errorFunctionNumPages(this.value);
+    this.classList.add("invalid");
+  } else {
+    this.classList.remove("invalid");
+  }
+}
+
+function validatePagesReadOnNumPagesInput() {
+  const pagesRead = document.getElementById('pagesRead');
+  if (this.value.length === 0 || (errorFunctionNumPages(this.value) !== undefined)) {
+    pagesRead.classList.remove("invalid");
+  } else if (errorFunctionPagesRead(pagesRead.value) !== undefined) {
+    pagesRead.nextElementSibling.textContent = errorFunctionPagesRead(pagesRead.value);
+    pagesRead.classList.add("invalid");
+  } else {
+    pagesRead.classList.remove("invalid");
+  }
+}
+
+function errorFunctionNumPages(string) {
+  const numPages = Number(string);
+  if (string.length === 0) return 'Please enter a positive whole number';
+  else if (!Number.isFinite(numPages)) return 'Please enter a decimal number';
+  else if (numPages <= 0) return 'Please enter a positive number';
+  else if (!Number.isInteger(numPages)) return 'Please enter a whole number (integer)';
+  else return undefined;
+}
+
+// The following function relies on numPages being valid. String can be of 0 length if no pages have been read
+function errorFunctionPagesRead(string) {
+  const numPages = Number(document.getElementById('numPages').value)
+
+  const pagesRead = Number(string);
+  if (!Number.isFinite(pagesRead)) return 'Please enter a decimal number';
+  else if (pagesRead < 0) return 'Please enter a non-negative number';
+  else if (document.getElementById('numPages').value !== '' && pagesRead > numPages) return `Not possible to have read ${pagesRead} pages of a ${numPages} page book`;
+  else if (!Number.isInteger(pagesRead)) return 'Please enter a whole number (integer)';
+  else return undefined;
+}
+
+function validateOnblurPagesRead() {
+  const numPages = document.getElementById('numPages');
+  if (this.value.length === 0 || (errorFunctionNumPages(numPages.value) !== undefined)) {
+    this.classList.remove("invalid");
+    this.removeEventListener("input", validateOninputPagesRead);
+  }
+  else if (errorFunctionPagesRead(this.value) !== undefined) {
+    this.nextElementSibling.textContent = errorFunctionPagesRead(this.value);
+    this.classList.add("invalid");
+    this.addEventListener("input", validateOninputPagesRead);
+  } else {
+    this.classList.remove("invalid");
+    this.removeEventListener("input", validateOninputPagesRead);
+  }
+}
+
+function validateOninputPagesRead() {
+  const numPages = document.getElementById('numPages');
+  if (this.value.length === 0 || (errorFunctionNumPages(numPages.value) !== undefined)) {
+    this.classList.remove("invalid");
+  } else if (errorFunctionPagesRead(this.value) !== undefined) {
+    this.nextElementSibling.textContent = errorFunctionPagesRead(this.value);
+    this.classList.add("invalid");
+  } else {
+    this.classList.remove("invalid");
+  }
+}
+
+function validateOninput() {
+  if (this.checkValidity()) {
+    this.classList.remove("invalid");
+  } else {
+    this.classList.add("invalid");
+  }
+}
+
+function clearAddEditForm() {
+  const addEditInputFields = document.querySelectorAll("#add-edit-book input");
+  for (let i = 0; i < addEditInputFields.length; i++) {
+    const inputField = addEditInputFields.item(i);
+    inputField.value = '';
+    inputField.classList.remove('invalid');
+  }
+}
+
+function normalValidationBehaviourAddEditForm() {
+  document.getElementById('title').removeEventListener('input', validateOninput);
+
+  document.getElementById('author').removeEventListener('input', validateOninput);
+
+  document.getElementById('numPages').removeEventListener('input', validateOninputNumPages);
+  document.getElementById('numPages').addEventListener('blur', validateOnblurNumPages);
+  document.getElementById('numPages').addEventListener('input', validatePagesReadOnNumPagesInput);
+
+  document.getElementById('pagesRead').removeEventListener('input', validateOninputPagesRead);
+  document.getElementById('pagesRead').addEventListener('blur', validateOnblurPagesRead);
+}
+
+function failedSubmitValidationBehaviourAddEditForm() {
+  const title = document.getElementById('title');
+  title.addEventListener('input', validateOninput);
+  validateOninput.call(title);
+
+  const author = document.getElementById('author');
+  author.addEventListener('input', validateOninput);
+  validateOninput.call(author);
+
+  const numPages = document.getElementById('numPages');
+  numPages.removeEventListener('blur', validateOnblurNumPages);
+  numPages.addEventListener('input', validateOninputNumPages);
+  validateOninputNumPages.call(numPages);
+
+  const pagesRead = document.getElementById('pagesRead');
+  pagesRead.removeEventListener('blur', validateOnblurPagesRead);
+  pagesRead.addEventListener('input', validateOninputPagesRead);
+  if (!errorFunctionNumPages(numPages)) validateOninputPagesRead.call(pagesRead);
+}
+
+function validateAddEditForm(e) {
+  const addEditForm = document.getElementById('add-edit-book');
+  const title = document.getElementById('title');
+  const author = document.getElementById('author');
+  const numPages = document.getElementById('numPages');
+  const pagesRead = document.getElementById('pagesRead');
+
+  if (!addEditForm.checkValidity() || errorFunctionNumPages(numPages.value) !== undefined || errorFunctionPagesRead(pagesRead.value) !== undefined) {
+    e.preventDefault();
+    failedSubmitValidationBehaviourAddEditForm();
+  } else {
+    e.preventDefault();
+    addBook(title.value, author.value, Number(numPages.value), Number(pagesRead.value));
+    closeAddBookForm();
+  }
 }
 
 // Combined functions (affects both DOM and library simultaneously)
@@ -257,15 +412,16 @@ function createElement(type, attributes = {}) {
 
 // Page initialization
 
-function addInitialListeners() {
+function initializePage() {
   document.querySelector('.add-book-button').addEventListener('click', displayAddBookForm);
   document.getElementById('close-add-edit-book').addEventListener('click', closeAddBookForm);
+  document.getElementById('add-edit-book').addEventListener("submit", validateAddEditForm);
 }
 
 // Global calls
 
 const library = [];
-addInitialListeners();
+initializePage();
 
 addBook('Example Title', 'E. Specimen', 198, 103);
 addBook('AAAAAAAAAAAaaaaaaaH pasodifjnpas paosdnfjp[ apsdofjn asdofij a oijafdsoai', 'Mr. Horror Script', 1209, 1209);
