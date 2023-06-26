@@ -559,6 +559,15 @@ function capitalizeString(str) {
 
 // Page initialization
 
+function initializeExampleLibrary() {
+  addBookLibrary(new Book('Computer Science: An Interdisciplinary Approach', 'Robert Sedgewick and Kevin Wayne', 1095, 713));
+  addBookLibrary(new Book('Algorithms (4th Edition)', 'Robert Sedgewick and Kevin Wayne', 931, 240))
+  addBookLibrary(new Book('The Red and the Black', 'Stendhal', 608, 608))
+  addBookLibrary(new Book('The Mind Illuminated', 'John Yates and Matthew Immergut with Jeremy Graves', 512, 0));
+  addBookLibrary(new Book('Crime and Punishment', 'Fyodor Dostoyevsky', 720, 720))
+  addBookLibrary(new Book('Atomic Habits', 'James Clear', 320, 0));
+}
+
 function initializePage() {
   document.querySelector('.add-book-button').addEventListener('click', displayAddBookForm);
   document.getElementById('close-add-edit-book').addEventListener('click', closeAddEditBookForm);
@@ -573,8 +582,7 @@ function initializePage() {
     let filterLink = filterLinks.item(i);
     filterLink.addEventListener('click', styleFilterLinkActive);
   }
-  addBookLibrary(new Book('Example Title', 'E. Specimen', 198, 103));
-  addBookLibrary(new Book('AAAAAAAAAAAaaaaaaaH pasodifjnpas paosdnfjp[ apsdofjn asdofij a oijafdsoai', 'Mr. Horror Script', 1209, 1209));
+  initializeExampleLibrary();
   displayAllBooks();
   filterLinksContainer.querySelector('[data-filter="all"]').classList.add('active');
 }
