@@ -454,6 +454,51 @@ function validateAddEditForm(e) {
   }
 }
 
+function clearDOMLibrary() {
+  let bookCards = document.querySelector('main').querySelectorAll('.book-card');
+  for (let i = 0; i < bookCards.length; i++) {
+    let bookCard = bookCards.item(i);
+    bookCard.remove();
+  }
+}
+
+function displayAllBooks() {
+  clearDOMLibrary();
+  for (let i = 0; i < library.length; i++) {
+    let book = library[i];
+    displayBook(book);
+  }
+}
+
+function displayFilteredBooks(test) {
+  clearDOMLibrary();
+  for (let i = 0; i < library.length; i++) {
+    let book = library[i];
+    if (test(book)) displayBook(book);
+  }
+}
+
+const displayUnreadBooks = function() {
+  displayFilteredBooks(function(book) {return book.getProgressStatus() === 0});
+}
+
+const displayReadingBooks = function() {
+  displayFilteredBooks(function(book) {return book.getProgressStatus() > 0 && book.getProgressStatus() < 100});
+}
+
+const displayReadBooks = function() {
+  displayFilteredBooks(function(book) {return book.getProgressStatus() === 100});
+}
+
+function styleFilterLinkActive() {
+  let filterLinks = document.querySelectorAll('.filter-links a');
+  for (let i = 0; i < filterLinks.length; i++) {
+    let filterLink = filterLinks.item(i);
+    filterLink.classList.remove('active');
+  }
+  this.classList.add('active');
+}
+
 // Combined functions (affects both DOM and library simultaneously)
 
 function addBook(title, author, numPages, pagesRead) {
@@ -512,12 +557,23 @@ function initializePage() {
   document.querySelector('.add-book-button').addEventListener('click', displayAddBookForm);
   document.getElementById('close-add-edit-book').addEventListener('click', closeAddEditBookForm);
   document.getElementById('add-edit-book').addEventListener("submit", validateAddEditForm);
+  let filterLinksContainer = document.querySelector('.filter-links');
+  filterLinksContainer.querySelector('[data-filter="all"]').addEventListener('click', displayAllBooks);
+  filterLinksContainer.querySelector('[data-filter="unread"]').addEventListener('click', displayUnreadBooks);
+  filterLinksContainer.querySelector('[data-filter="reading"]').addEventListener('click', displayReadingBooks);
+  filterLinksContainer.querySelector('[data-filter="read"]').addEventListener('click', displayReadBooks);
+  let filterLinks = document.querySelectorAll('.filter-links a');
+  for (let i = 0; i < filterLinks.length; i++) {
+    let filterLink = filterLinks.item(i);
+    filterLink.addEventListener('click', styleFilterLinkActive);
+  }
+  addBookLibrary(new Book('Example Title', 'E. Specimen', 198, 103));
+  addBookLibrary(new Book('AAAAAAAAAAAaaaaaaaH pasodifjnpas paosdnfjp[ apsdofjn asdofij a oijafdsoai', 'Mr. Horror Script', 1209, 1209));
+  displayAllBooks();
+  filterLinksContainer.querySelector('[data-filter="all"]').classList.add('active');
 }
 
 // Global calls
 
 const library = [];
 initializePage();
-
-addBook('Example Title', 'E. Specimen', 198, 103);
-addBook('AAAAAAAAAAAaaaaaaaH pasodifjnpas paosdnfjp[ apsdofjn asdofij a oijafdsoai', 'Mr. Horror Script', 1209, 1209);

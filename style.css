@@ -43,6 +43,15 @@ nav.filter-links {
   font-size: 1.5rem;
 }
 
+.filter-links a:hover {
+  text-decoration: underline;
+}
+
+.filter-links a.active {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
 main {
   display: flex;
   flex-direction: column;
