@@ -413,6 +413,7 @@ function normalValidationBehaviourAddEditForm() {
 }
 
 function failedSubmitValidationBehaviourAddEditForm() {
+
   const title = document.getElementById('title');
   title.addEventListener('input', validateOninput);
   validateOninput.call(title);
@@ -430,6 +431,11 @@ function failedSubmitValidationBehaviourAddEditForm() {
   pagesRead.removeEventListener('blur', validateOnblurPagesRead);
   pagesRead.addEventListener('input', validateOninputPagesRead);
   if (!errorFunctionNumPages(numPages)) validateOninputPagesRead.call(pagesRead);
+
+  if (title.classList.contains('invalid')) title.parentElement.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
+  else if (author.classList.contains('invalid')) author.parentElement.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
+  else if (numPages.classList.contains('invalid')) numPages.parentElement.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
+  else if (pagesRead.classList.contains('invalid')) pagesRead.parentElement.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" })
 }
 
 function validateAddEditForm(e) {
